@@ -1,0 +1,333 @@
+<extend name="Layout:index.back"/>
+<block name="content">
+<!-- 综合区域 start 包括幻灯展示，商城快报 -->
+<div class="colligate w1210 bc mt10">
+    <!-- 幻灯区域 start -->
+    <div class="slide fl">
+        <div class="area">
+            <div class="slide_items">
+                <ul>
+                    <foreach name='banner' item="list">
+                        <li><a href="{{:U('Goods/goods',array('id'=>$list['goods_id']))}}"><img src="{{$list['img_url']}}" alt="" /></a></li>
+                    </foreach>
+
+
+                </ul>
+            </div>
+            <div class="slide_controls">
+                <ul>
+                    <foreach name='banner' item="list">
+                        <li <if condition="$key eq 1"> class='on'</if>{{$key}}</li>
+                    </foreach>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- 幻灯区域 end-->
+
+    <!-- 快报区域 start-->
+    <div class="coll_right fl ml10">
+        <div class="ad"><a href=""><img src="__PUBLIC__/images/ad.jpg" alt="" /></a></div>
+
+        <div class="news mt10">
+            <h2><a href="">更多快报&nbsp;></a><strong>网站快报</strong></h2>
+            <ul>
+
+              <volist name="kb" id="list">
+                <li class="odd"><a href="">{{$list['name']}}</a></li>
+              </volist>
+            </ul>
+
+        </div>
+
+        <div class="service mt10">
+            <h2>
+                <span class="title1 on"><a href="">话费</a></span>
+                <span><a href="">旅行</a></span>
+                <span><a href="">彩票</a></span>
+                <span class="title4"><a href="">游戏</a></span>
+            </h2>
+            <div class="service_wrap">
+                <!-- 话费 start -->
+                <div class="fare">
+                    <form action="">
+                        <ul>
+                            <li>
+                                <label for="">手机号：</label>
+                                <input type="text" name="phone" value="请输入手机号" class="phone" />
+                                <p class="msg">支持移动、联通、电信</p>
+                            </li>
+                            <li>
+                                <label for="">面值：</label>
+                                <select name="" id="">
+                                    <option value="">10元</option>
+                                    <option value="">20元</option>
+                                    <option value="">30元</option>
+                                    <option value="">50元</option>
+                                    <option value="" selected>100元</option>
+                                    <option value="">200元</option>
+                                    <option value="">300元</option>
+                                    <option value="">400元</option>
+                                    <option value="">500元</option>
+                                </select>
+                                <strong>98.60-99.60</strong>
+                            </li>
+                            <li>
+                                <label for="">&nbsp;</label>
+                                <input type="submit" value="点击充值" class="fare_btn" /> <span><a href="">北京青春怒放独家套票</a></span>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+                <!-- 话费 start -->
+
+                <!-- 旅行 start -->
+                <div class="travel none">
+                    <ul>
+                        <li>
+                            <a href=""><img src="__PUBLIC__/images/holiday.jpg" alt="" /></a>
+                            <a href="" class="button">度假查询</a>
+                        </li>
+                        <li>
+                            <a href=""><img src="__PUBLIC__/images/scenic.jpg" alt="" /></a>
+                            <a href="" class="button">景点查询</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 旅行 end -->
+
+                <!-- 彩票 start -->
+                <div class="lottery none">
+                    <p><img src="__PUBLIC__/images/lottery.jpg" alt="" /></p>
+                </div>
+                <!-- 彩票 end -->
+
+                <!-- 游戏 start -->
+                <div class="game none">
+                    <ul>
+                        <li><a href=""><img src="__PUBLIC__/images/sanguo.jpg" alt="" /></a></li>
+                        <li><a href=""><img src="__PUBLIC__/images/taohua.jpg" alt="" /></a></li>
+                        <li><a href=""><img src="__PUBLIC__/images/wulin.jpg" alt="" /></a></li>
+                    </ul>
+                </div>
+                <!-- 游戏 end -->
+            </div>
+        </div>
+
+    </div>
+    <!-- 快报区域 end-->
+</div>
+<!-- -综合区域 end -->
+
+<div style="clear:both;"></div>
+<!-- 导购区域 start -->
+<div class="guide w1210 bc mt15">
+    <!-- 导购左边区域 start -->
+    <div class="guide_content fl">
+        <h2>
+            <span class="on">新品上架</span>
+            <span>热卖商品</span>
+            <span>精品推荐</span>
+        </h2>
+
+        <div class="guide_wrap">
+            <!-- 疯狂抢购 start-->
+            <div class="crazy">
+                <ul>
+                    <foreach name="new" item="row">
+                    <li>
+                        <dl>
+                            <dt><a href=""><img src="{{$row['logo']}}" alt="" /></a></dt>
+                            <dd><a href="{{:U('Goods/goods',array('id'=>$row['id']))}}">{{$row['name']}}</a></dd>
+                        </dl>
+                    </li>
+                    </foreach>
+                </ul>
+            </div>
+            <!-- 疯狂抢购 end-->
+
+            <!-- 热卖商品 start -->
+            <div class="hot none">
+                <ul>
+                    <foreach name="hot" item="row">
+                        <li>
+                            <dl>
+                                <dt><a href=""><img src="{{$row['logo']}}" alt="" /></a></dt>
+                                <dd><a href="{{:U('Goods/goods',array('id'=>$row['id']))}}">{{$row['name']}}</a></dd>
+                            </dl>
+                        </li>
+                    </foreach>
+                </ul>
+            </div>
+            <!-- 热卖商品 end -->
+
+            <!-- 推荐商品 atart -->
+            <div class="recommend none">
+                <ul>
+                    <foreach name="best" item="row">
+                        <li>
+                            <dl>
+                                <dt><a href=""><img src="{{$row['logo']}}" alt="" /></a></dt>
+                                <dd><a href="{{:U('Goods/goods',array('id'=>$row['id']))}}">{{$row['name']}}</a></dd>
+                                <!--<dd><span>售价：</span><strong> ￥{{$row['shop_price']}}</strong></dd>-->
+                            </dl>
+                        </li>
+                    </foreach>
+                </ul>
+            </div>
+            <!-- 推荐商品 end -->
+
+        </div>
+
+    </div>
+    <!-- 导购左边区域 end -->
+
+    <!-- 侧栏 网站首发 start-->
+    <div class="sidebar fl ml10">
+        <h2><strong>网站首发</strong></h2>
+        <div class="sidebar_wrap">
+            <volist name="sf" id="list">
+
+            <dl class="first">
+                <dt class="fl"><a href=""><img src="{{$list['img_url']}}" alt="" /></a></dt>
+                <dd><strong><a href="">{{$list['name']}} </a></strong> <em>首发</em></dd>
+                <dd>{{$list['intro']}}</dd>
+            </dl>
+            </volist>
+
+        </div>
+
+
+    </div>
+    <!-- 侧栏 网站首发 end -->
+
+</div>
+<!-- 导购区域 end -->
+
+<div style="clear:both;"></div>
+
+<!--1F 电脑办公 start -->
+<div class="floor1 floor w1210 bc mt10">
+    <!-- 1F 左侧 start -->
+    <div class="floor_left fl">
+        <!-- 商品分类信息 start-->
+        <div class="cate fl">
+            <h2>电脑、手机、办公</h2>
+            <div class="cate_wrap">
+                <ul>
+                    <foreach name="pc_bg" item="row">
+                     <li><a href="{{:U('goodsCategory/lists',array('sign'=>$row['sign'],'parent_sign'=>'sm'))}}"><b>.</b>{{$row['name']}}</a></li>
+                     </foreach>
+                </ul>
+                <p><a href=""><img src="__PUBLIC__/images/notebook.jpg" alt="" /></a></p>
+            </div>
+
+
+        </div>
+        <!-- 商品分类信息 end-->
+
+        <!-- 商品列表信息 start-->
+        <div class="goodslist fl">
+            <h2>
+                <span class="on">推荐商品</span>
+                <span>精品</span>
+                <span>热卖</span>
+            </h2>
+            <div class="goodslist_wrap">
+                <div>
+
+                    <ul>
+                        <foreach name="pc_bg_new" item="row">
+                            <li>
+                                <dl>
+                                    <dt><a href=""><img src="{{$row['logo']}}" alt="" /></a></dt>
+                                    <dd><a href="{{:U('Goods/goods',array('id'=>$row['id']))}}">{{$row['name']}}</a></dd>
+                                </dl>
+                            </li>
+                        </foreach>
+
+                    </ul>
+                </div>
+
+                <div class="none">
+                    <ul>
+                        <foreach name="pc_bg_best" item="row">
+                            <li>
+                                <dl>
+                                    <dt><a href=""><img src="{{$row['logo']}}" alt="" /></a></dt>
+                                    <dd><a href="{{:U('Goods/goods',array('id'=>$row['id']))}}">{{$row['name']}}</a></dd>
+                                </dl>
+                            </li>
+                        </foreach>
+
+                    </ul>
+                </div>
+
+                <div class="none">
+                    <ul>
+                        <foreach name="pc_bg_hot" item="row">
+                            <li>
+                                <dl>
+                                    <dt><a href=""><img src="{{$row['logo']}}" alt="" /></a></dt>
+                                    <dd><a href="{{:U('Goods/goods',array('id'=>$row['id']))}}">{{$row['name']}}</a></dd>
+                                </dl>
+                            </li>
+                        </foreach>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- 商品列表信息 end-->
+    </div>
+    <!-- 1F 左侧 end -->
+
+    <!-- 右侧 start -->
+    <div class="sidebar fl ml10">
+        <!-- 品牌旗舰店 start -->
+        <div class="brand">
+            <h2><a href="">更多品牌&nbsp;></a><strong>品牌旗舰店</strong></h2>
+            <div class="sidebar_wrap">
+                <ul>
+                    <li><a href=""><img src="__PUBLIC__/images/dell.gif" alt="" /></a></li>
+                    <li><a href=""><img src="__PUBLIC__/images/acer.gif" alt="" /></a></li>
+                    <li><a href=""><img src="__PUBLIC__/images/fujitsu.jpg" alt="" /></a></li>
+                    <li><a href=""><img src="__PUBLIC__/images/hp.jpg" alt="" /></a></li>
+                    <li><a href=""><img src="__PUBLIC__/images/lenove.jpg" alt="" /></a></li>
+                    <li><a href=""><img src="__PUBLIC__/images/samsung.gif" alt="" /></a></li>
+                    <li><a href=""><img src="__PUBLIC__/images/dlink.gif" alt="" /></a></li>
+                    <li><a href=""><img src="__PUBLIC__/images/seagate.jpg" alt="" /></a></li>
+                    <li><a href=""><img src="__PUBLIC__/images/intel.jpg" alt="" /></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 品牌旗舰店 end -->
+
+        <!-- 分类资讯 start -->
+        <div class="info mt10">
+            <h2><strong>数码分类资讯</strong></h2>
+            <div class="sidebar_wrap">
+                <ul>
+                    <foreach name="suzx" item="list">
+                        <li><a href=""><b>.</b>{{$list['name']}}</a></li>
+                    </foreach>
+
+                </ul>
+            </div>
+
+        </div>
+        <!-- 分类资讯 end -->
+
+        <!-- 广告 start -->
+        <div class="ads mt10">
+            <a href=""><img src="__PUBLIC__/images/canon.jpg" alt="" /></a>
+        </div>
+        <!-- 广告 end -->
+    </div>
+    <!-- 右侧 end -->
+
+</div>
+<!--1F 电脑办公 start -->
+</block>

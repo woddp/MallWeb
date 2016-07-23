@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>系统后台</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="__PUBLIC__/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="__PUBLIC__/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="__PUBLIC__/js/ie-emulation-modes-warning.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="__PUBLIC__/js/jquery-1.11.0.js"></script>
+    <script src="__PUBLIC__/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/js/admin.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link href="__PUBLIC__/css/dashboard.css" rel="stylesheet">
+    <style>
+        .article_display{
+            display: none;
+        }
+
+        .nav-sidebar  ul li{
+            list-style: none;
+            margin-top: 15px;
+
+        }
+    </style>
+    <block name="style"> </block>
+    <block name="js"> </block>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">后台关系系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/index.php/Index/index.html">仪表盘</a></li>
+                <li><a href="#">设置</a></li>
+                <li><a href="#">欢迎{{$name}}</a></li>
+                <li><a href="/index.php/Home/Index/index.html">前台</a></li>
+                <li><a href="{{:U('Login/logout')}}">退出</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#">概观 <span class="sr-only">(current)</span></a></li>
+                <li><a href="{{:U('Index/index')}}">仪表盘</a></li>
+                <li><a href="{{:U('Test/listing')}}">八百万条数据分页</a></li>
+                <li>
+                    <a href="javascript:void(0)" onclick="click_bottom(this)">RBAC角色访问控制 <span class="sr-only">(current)</span></a>
+                    <ul class="article_display">
+                        <li><a href="{{:U('Permission/index')}}">权限系统</a></li>
+                        <li><a href="{{:U('Role/index')}}">角色管理</a></li>
+                        <li><a href="{{:U('User/index')}}">管理员操作</a></li>
+                    </ul>
+                </li>
+                <li><a href="{{:U('Url/index')}}">后台RUL地址集合</a></li>
+            </ul>
+
+            <ul class="nav nav-sidebar">
+            <volist name="menus" id="row">
+                <li <if condition="$row['parent_id'] eq 0" >class="active"</if>  ><a href="{{:U($row['path'])}}">{{$row['name']}}</a></li>
+            </volist>
+            </ul>
+            <eq name="name" value="admin">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#">系统操作<span class="sr-only">(current)</span></a></li>
+                <li><a href="{{:U('Permission/index')}}">权限操作</a></li>
+                <li><a href="{{:U('Role/index')}}">角色操作</a></li>
+                <li><a href="{{:U('Admin/index')}}">管理员操作</a></li>
+                <li><a href="{{:U('Menu/index')}}">菜单操作</a></li>
+            </ul>
+            </eq>
+        </div>
+
+               <block name="content">内容区</block>
+
+    </div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<block name="js_bottom"> </block>
+<script src="__PUBLIC__/js/admin.js"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<script src="__PUBLIC__/js/holder.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="__PUBLIC__/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+</html>

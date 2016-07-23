@@ -1,0 +1,191 @@
+<extend name="layout:index.other" />
+<block name="css">
+	<link rel="stylesheet" href="__PUBLIC__/style/fillin.css" type="text/css">
+</block>
+<block name="js">
+	<script type="text/javascript" src="__PUBLIC__/js/cart2.js"></script>
+	<script>
+		$(function () {
+			//默认送货方式 + 总价
+			var price={{$goods['total']}}*1+($('.delivery_info input:checked').attr('price')*1);
+           $('#tot').html("￥"+price+'元');
+			$('#delivery').html($('.delivery_info input:checked').attr('price')*1);
+			delivery_price();
+			function delivery_price() {
+				$('.delivery_info input').change(function () {
+					$('#delivery').html(($(this).attr('price')*1));
+				var	price=($(this).attr('price')*1)+({{$goods['total']}}*1);
+					$('#tot').html("￥"+price+'元');
+				});
+			}
+		})
+	</script>
+</block>
+<block name="content">
+
+	<!-- 主体部分 start -->
+	<div class="fillin w990 bc mt15">
+		<div class="fillin_hd">
+			<h2>填写并核对订单信息</h2>
+		</div>
+
+		<div class="fillin_bd">
+			<!-- 收货人信息  start-->
+			<div class="address">
+				<h3>收货人信息 </h3>
+				<div class="address_info">
+					<form action="{{:U('ShoppingCar/flow2')}}" method="post">
+				<p>
+					<foreach name="address" item="row">
+						<input  name="address_id" <if condition="$row['is_default'] eq 1">checked</if>  type="radio" value="{{$row[id]}}" name="address_id"/>{{$row['name']}}  {{$row['tel']}} {{$row['province_name']}} {{$row['city_name']}} {{$row[area_name]}} {{$row['detail_address']}}</p><br />
+					</foreach>
+
+				</div>
+
+			</div>
+			<!-- 收货人信息  end-->
+
+			<!-- 配送方式 start -->
+			<div class="delivery">
+				<h3>送货方式</h3>
+				<div class="delivery_info">
+					<table width="30%">
+						<thead>
+						<tr>
+							<th class="col1">送货方式</th>
+							<th class="col2">运费</th>
+							<th class="col3">运费标准</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><br /></td>
+						</tr>
+                      <foreach name="delivery" item="row">
+						<tr>
+							<td> <input  price="{{$row['price']}}" name="delivery_id" value="{{$row['id']}}" <if condition="$row['is_default'] eq 1">checked</if> type="radio" name="delivery" />{{$row['name']}} </td>
+							<td>￥{{$row['price']}}</td>
+							<td>  {{$row['intro']}}</td>
+						</tr>
+						<tr>
+							<td><br /></td>
+						</tr>
+					  </foreach>
+						</tbody>
+					</table>
+				</div>
+
+
+			</div> 
+			<!-- 配送方式 end --> 
+
+			<!-- 支付方式  start-->
+			<div class="pay">
+				<h3>支付方式 </h3>
+				<div class="pay_info">
+					<table width="80%">
+						<tr>
+							<td><br /></td>
+						</tr>
+						<foreach name="payment" item="row">
+						<tr >
+							<td class="col1"><input value="{{$row['id']}}" <if condition="$row['is_default'] eq 1">checked</if> type="radio" name="pay_type" />{{$row['name']}}</td>
+							<td class="col2">{{$row['intro']}}</td>
+						</tr>
+							<tr>
+								<td><br /></td>
+							</tr>
+					</foreach>
+					</table>
+				</div>
+
+
+			</div>
+			<!-- 支付方式  end-->
+
+			<!-- 发票信息 start-->
+			<div class="receipt">
+				<h3>发票信息 </h3>
+				<div class="receipt_info">
+					<ul>
+						<li>
+							<label for="">发票抬头：</label>
+							<input type="radio"  name="invoice_type" value="1" checked="checked" class="personal" />个人
+							<input type="radio" name="invoice_type" value="2" class="company"/>单位
+							<input type="text" name="invoice_address" class="txt company_input" disabled="disabled" />
+						</li>
+						<br>
+						<li>
+							<label for="">发票内容：</label>
+							<input type="radio" name="invoice_detailed" value="1" checked="checked" />明细
+							<input type="radio" name="invoice_detailed" value="2" />办公用品
+							<input type="radio" name="invoice_detailed" value="3" />体育休闲
+							<input type="radio" name="invoice_detailed" value="4" />耗材
+						</li>
+					</ul>
+				</div>
+
+
+			</div>
+			<!-- 发票信息 end-->
+
+			<!-- 商品清单 start -->
+			<div class="goods">
+				<h3>商品清单</h3>
+				<table>
+					<thead>
+						<tr>
+							<th class="col1">商品</th>
+							<th class="col3">价格</th>
+							<th class="col4">数量</th>
+							<th class="col5">小计</th>
+						</tr>	
+					</thead>
+					<tbody>
+					<foreach name="goods['rows']" item="row">
+						<tr>
+							<td class="col1"><a href=""><img src="{{$row['logo']}}" alt="" /></a>  <strong><a href="">{{$row['name']}}</a></strong></td>
+							<td class="col3">￥{{$row['shop_price']}}</td>
+							<td class="col4"> {{$row['amount']}}</td>
+							<td class="col5"><span>￥ {{$row['subtotal']}}</span></td>
+						</tr>
+					</foreach>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="5">
+								<ul>
+									<li>
+										<span>总商品金额：</span>
+										<em>￥{{$goods['total']}}</em>
+									</li>
+
+									<li>
+										<span>运费：</span>
+										<em id="delivery"></em>
+									</li>
+
+								</ul>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<!-- 商品清单 end -->
+		
+		</div>
+		</form>
+		<div class="fillin_ft">
+			<a href="javascript:" onclick="do_submit()"><span>提交订单</span></a>
+			<script>
+				function do_submit() {
+					console.log(1);
+					$('form').get(0).submit();
+				}
+			</script>
+			<p>应付总额：<strong id="tot"></strong></p>
+			
+		</div>
+	</div>
+	<!-- 主体部分 end -->
+</block>

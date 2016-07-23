@@ -1,0 +1,325 @@
+<extend name="layout:index" />
+<block name="style">
+    <link href="__PUBLIC__/plug-in/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <link href="__PUBLIC__/plug-in/layer/skin/layer.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/plug-in/dist/css/wangEditor.min.css">
+<style>
+    .btn-success{
+        width: 80px;
+    text-align: center;
+    }
+
+    #editor-trigger {
+        height: 300px;
+
+        /*max-height: 500px;*/
+    }
+    /*.container {*/
+        /*width: 100%;*/
+        /*margin: 0 auto;*/
+        /*position: relative;*/
+    /*}*/
+
+</style>
+</block>
+<block name="content">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <ol class="breadcrumb">
+        <li><a href="{{:U('Index/index')}}">首页</a></li>
+        <li><a href="{{:U('Goods/index')}}">商品列表</a></li>
+        <li class="active">商品添加</li>
+    </ol>
+
+    <hr/>
+    <div class="container" style="width: 70%;">
+
+
+        <form action="{{:U('Goods/edit')}}" method="post">
+            <div class="form-group">
+                <label >商品名称</label>
+                <input type="text" name="name" class="form-control"  value="{{$goods.name}}" placeholder="商品名称">
+                <input type="hidden" name="id"  value="{{$goods.id}}" >
+            </div>
+            <div class="form-group">
+                <label >货号</label>
+                <input type="text" name="sn" class="form-control"  value="{{$goods.sn}}" placeholder="货号">
+
+            </div>
+            <div class="form-group">
+                <label >商品logo</label>
+                <input type="hidden" name="logo"  id="login" value="{{$goods.logo}}" >
+                <input id="file_upload" name="file_upload" type="file" enctype="multipart/form-data" >
+                <br />
+                <img id="upload_img" style="display: block;" src="{{$goods.logo}}"  width="100"/>
+            </div>
+
+            <div class="form-group">
+                <label >商品分类</label>
+                <input class="form-control" id="disabledInput" type="text" value="" disabled>
+                <input type="hidden" id="goods_category_id" name="goods_category_id"  value="" >
+                <div class="zTreeDemoBackground left">
+                    <ul id="goodstree" class="ztree"></ul>
+                </div>
+            </div>
+            <script src="__PUBLIC__/plug-in/ztree/jquery.ztree.core.min.js"></script>
+            <link href="__PUBLIC__/plug-in/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+            <script type="text/javascript">
+                ///////////////////////////////////    tree 树形      //////////////////////////////////
+
+                var zTreeObj;
+                // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+                var setting = {
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            pIdKey: "parent_id",
+                        }
+                    },
+                    callback: {
+                        onClick: function (event,name,obj) {
+                            console.log(obj.name)
+                            $('#disabledInput').val(obj.name);
+                            $('#goods_category_id').val(obj.id);
+                        }
+                    }
+                };
+                // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+                var zNodes={{$goodscategory}};
+                $(document).ready(function(){
+                    zTreeObj = $.fn.zTree.init($("#goodstree"), setting, zNodes);
+                    zTreeObj.expandAll(false)
+
+                        var nodes=zTreeObj.getNodeByParam("id",{{$goods.goods_category_id}});
+                        zTreeObj.selectNode(nodes);
+                        //父级name
+                        $('#disabledInput').val(nodes.name);
+                        //父级id
+                        $('#goods_category_id').val(nodes.id);
+
+                });
+
+
+            </script>
+            <div class="form-group">
+                <label >品牌</label>
+                <select name='brand_id' class="form-control">
+                    <volist name="brand" id="row">
+                        <option value="{{$row['id']}}" <if condition="$row['id'] eq $goods['brand_id']"> selected </if>  >{{$row['name']}}--{{$row['goods_category']['name']}}</option>
+                    </volist>
+                </select>
+            </div>
+            <div class="form-group">
+                <label >供货商</label>
+                        {{:html_select($supplier,'id','name','supplier_id',$goods['supplier_id'])}}
+            </div>
+            <div class="form-group">
+                <label >市场价格</label>
+                <div class="form-group">
+                    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">¥</div>
+                        <input type="text" name="market_price" class="form-control"  value="{{$goods.market_price}}" >
+                        <div class="input-group-addon">.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label >本店价格</label>
+                <div class="input-group">
+                    <div class="input-group-addon">¥</div>
+                    <input type="text" name="shop_price" class="form-control" value="{{$goods.shop_price}}" >
+                    <div class="input-group-addon">.00</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label >会员折扣</label>
+                <foreach name="member_level" item="row">
+                    <br/>
+                    &nbsp;&nbsp;&nbsp;{{$row['name']}}<br style="padding: 0px"/>
+                    <input type="text" name="discount[{{$row['id']}}]"  class="form-control" value="{{$row['price']}}" placeholder="打折率" >
+                </foreach>
+            </div>
+            <div class="form-group">
+                <label >库存</label>
+                <input type="text" name="stock" class="form-control"  value="100"  value="{{$goods.stock}}">
+            </div>
+
+
+            <div class="form-group">
+                <label>排序</label>
+                <input type="number" name="sort" class="form-control" value="{{$goods.sort}}" >
+            </div>
+
+            <div class="form-group">
+                <label >是否上架</label>
+                <div class="radio">
+                <label>
+                    <input class="is_on_sale" type="radio" name="is_on_sale" value="1" /> 是
+                </label>
+                <label>
+                    <input class="is_on_sale" type="radio" name="is_on_sale" value="0" /> 否
+                </label>
+                    </div>
+            </div>
+
+            <div class="form-group">
+                <label >商品状态</label>
+
+                <div class="radio">
+                    <label>
+                        <input  class="goods_status" type="checkbox" name="goods_status[]"
+                               value="1" > 精品
+                    </label>
+                    <label>
+                        <input class="goods_status" type="checkbox" name="goods_status[]"
+                               value="2" > 热销
+                    </label>
+                    <label>
+                        <input class="goods_status" type="checkbox" name="goods_status[]"
+                               value="4" > 新品
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label >是否设置首页轮播</label>
+
+                <div class="radio">
+                    <label>
+                        <input class="banner"  type="checkbox" name="banner"  <?php if(!empty($banner['goods_id'])){echo  'checked'; } ?> value="1" > 是
+
+                    </label>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label >轮播url</label>
+                <input class="form-control" type="text" name="img_url" value="{{$banner['img_url']}}" />
+                <input class="form-control" type="hidden" name="banner_id" value="{{$banner['id']}}" />
+            </div>
+            <div class="form-group ">
+                <hr/>
+                <label >相册上传</label>
+                <div class="row gallery"  >
+                      <volist name='gallery' id="row">
+                          <div class="col-md-2" >
+                          <a href="#" class="thumbnail"  dataid="{{$row['id']}}">
+                              <img src="{{$row['path']}}" alt="..."><input type="hidden"  >
+                          </a>
+                          </div>
+                      </volist>
+                </div>
+                <input id="file_upload_more" name="file_upload" type="file" enctype="multipart/form-data" >
+                <hr/>
+                <script src="__PUBLIC__/plug-in/uploadify/jquery.uploadify.min.js"></script>
+                <script src="__PUBLIC__/plug-in/layer/layer.js"></script>
+                <script>
+                    $(function () {
+                        $(".is_on_sale").val([{{$goods.is_on_sale}}]);
+                    $(".goods_status").val({{$goods['goods_status']}});
+
+                    })
+///////////////////////////////////    logo 上传      //////////////////////////////////
+                    $('#file_upload').uploadify({
+                        'swf':"__PUBLIC__/plug-in/uploadify/uploadify.swf",
+                        'uploader':"{{:U('Upload/upload')}}",
+                        'buttonText':'上传',
+                        'buttonClass':'btn-success',
+                        onUploadSuccess:function (obj,url) {
+
+                            var data=$.parseJSON(url);
+                            if(data.status==1){
+                                $('#upload_img').attr('style','display:block');
+                                $('#upload_img').attr('src',data.url);
+
+                                $('#login').val(data.url);
+                                layer.alert('上传成功', {icon: 1});
+                            }else {
+                                layer.alert('上传失败,'+data.mes, {icon: 2});
+                            }
+
+                        }
+                    });
+///////////////////////////////////   相册 上传      //////////////////////////////////
+                    $('#file_upload_more').uploadify({
+                        'swf':"__PUBLIC__/plug-in/uploadify/uploadify.swf",
+                        'uploader':"{{:U('Upload/upload')}}",
+                        'buttonText':'上传',
+                        'buttonClass':'btn-success',
+                        onUploadSuccess:function (obj,url) {
+                            console.log(url);
+                            var data=$.parseJSON(url);
+                            if(data.status==1){
+                                var html= ' <div class="col-md-2 ">' +
+                                        '<a class="thumbnail" >' +
+                                        '<img  src='+data.url+' alt="...">' +
+                                        '<input type="hidden" name="gallery[]" value="'+data.url+'">' +
+                                        '</a>' +
+                                        '</div>';
+                                console.log(html);
+                                //添加成功并加到div里
+                                $('.gallery').append(html);
+                                layer.alert('上传成功', {icon: 1});
+                            }else {
+                                layer.alert('上传失败,'+data.mes, {icon: 2});
+                            }
+
+                        }
+                    });
+
+                    //为所有相册绑定点击事件
+                    $('.gallery').on('click','.col-md-2',function () {
+
+                        var div=$(this);
+
+
+                        layer.confirm('是否移除此图片？', {
+                            btn: ['取消','删除'] //按钮
+                        }, function(){
+                            layer.msg('', {
+                                time: 1, //20s后自动关闭
+
+                            });
+                        }, function(){
+                            //移除图片
+                          console.log(1);
+                            //如果图片有dataid值则ajax删除图片
+                            $imgid=$(div).find('a').attr('dataid');
+                            if($imgid){
+
+                            $.getJSON('{{:U("Goods/removeImg")}}',{id:$imgid},function (data) {
+                                console.log(data.status);
+                                //删除成功
+                                if(data.status=='1'){
+                                    div.remove();
+                                    layer.msg('移除成功', {icon: 1});
+                                }else {
+                                    layer.msg('移除失败', {icon: 5});
+                                }
+                            },'json');
+                            }else {
+                                div.remove();
+                                layer.msg('移除成功', {icon: 1});
+                            }
+                            //获取移除图片的id
+//                            div.remove();
+
+
+                        });
+
+                        return false;
+                    });
+
+
+
+
+
+                </script>
+
+            </div>
+            <button type="submit" class="btn btn-success">修 改</button>
+        </form>
+    </div>
+</div>
+
+</block>

@@ -1,0 +1,157 @@
+<extend name="layout:index"/>
+<block name="style">
+    <!--<link href="__PUBLIC__/plug-in/uploadify/uploadify.css" rel="stylesheet">-->
+    <link href="__PUBLIC__/plug-in/layer/skin/layer.css" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLIC__/plug-in/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+
+    <style>
+        .btn-success {
+            width: 80px;
+            text-align: center;
+        }
+        .ztree{
+            border-radius: 5px;
+            margin-top: 5px;
+            background-color: #f3e7ec;
+            border: 1px solid #f0efd8;
+        }
+    </style>
+</block>
+<block name="content">
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <ol class="breadcrumb">
+            <li><a href="{{:U('Index/index')}}">首页</a></li>
+            <li><a href="{{:U('Menu/index')}}">菜单列表</a></li>
+            <li class="active">菜单添加</li>
+        </ol>
+
+        <hr/>
+        <div class="container" style="width: 50%;">
+
+
+            <form action="{{:U('Menu/store')}}" method="post">
+                <div class="form-group">
+                    <label>菜单名称</label>
+                    <input type="text" name="name" class="form-control" value="{{$brand.name}}" placeholder="菜单名称">
+                </div>
+                <div class="form-group">
+                    <label>菜单路径</label>
+                    <select name='path' class="form-control">
+                        <option value="">选择url地址</option>
+                        <volist name="path" id="url">
+                            <option value="{{$url['url']}}">{{$url['url']}}</option>
+                        </volist>
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label>父级菜单</label>
+                    <input disabled type="text" id="parent_name" class="form-control" value="">
+                    <input type="hidden" id="parent_id" name="parent_id" class="form-control" value="">
+                    <ul id="Menu" class="ztree"></ul>
+
+                </div>
+                <div class="form-group">
+                    <label>所属权限</label>
+                    <ul id="permission" class="ztree"></ul>
+                    <div id="permission_id">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>角色介绍</label>
+                    <textarea name="intro" class="form-control" rows="3">{{$brand.intro}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>排序</label>
+                    <input type="number" name="sort" class="form-control" value="60" placeholder="序号">
+                </div>
+                <div class="form-group">
+                    <label>状态</label>
+                    <div class="radio">
+                        <label>
+                            <input class="status" type="radio" name="status"
+                                   checked value="1"> 显示
+                        </label>
+                        <label>
+                            <input class="status" type="radio" name="status"
+                                   value="0"> 隐藏
+                        </label>
+                    </div>
+
+                    <script type="text/javascript" src="__PUBLIC__/plug-in/zTree/jquery.ztree.core.min.js"></script>
+                    <script type="text/javascript" src="__PUBLIC__/plug-in/zTree/jquery.ztree.excheck.min.js"></script>
+                    <script>
+
+/////////////////////////////////////////////    tree 父级菜单      //////////////////////////////////
+
+                        var zTreeObj;
+                        // zTree 的参数配置，
+                        var setting = {
+                            data: {
+                                simpleData: {
+                                    enable: true,
+                                    pIdKey: "parent_id",
+                                }
+                            },
+                            callback: {
+                                //点击选择 事件
+                                onClick: function (event, name, obj) {
+                                    console.log(obj.name)
+                                    $('#parent_id').val(obj.id);
+                                    $('#parent_name').val(obj.name);
+                                }
+                            },
+
+                        };
+                        // zTree 的数据属性，
+                        var zNodes = {{$menu}};
+                        $(document).ready(function () {
+                            zTreeObj = $.fn.zTree.init($("#Menu"), setting, zNodes);
+                            zTreeObj.expandAll(true);
+
+                        });
+
+//////////////////////////////////////////////////    tree 权限菜单      //////////////////////////////////
+                        var zTreeObj;
+                        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+                        var permissionsetting = {
+                            data: {
+                                simpleData: {
+                                    enable: true,
+                                    pIdKey: "parent_id",
+                                }
+                            },
+                            callback: {
+                                //oncheck 选择框事件
+                                onCheck: function () {
+                                    //获取选中的值
+                                    var nodes = zTreeObj.getCheckedNodes(true);
+                                    console.log(nodes);
+                                    $('#permission_id').empty();
+                                    $(nodes).each(function (i, v) {
+                                        //选中一个权限则添加一个隐藏域
+                                        var input = '<input type="hidden" value="' + v.id + '" name="permission_id[]">';
+                                        $(input).appendTo($('#permission_id'));
+                                    });
+                                }
+                            },
+                            check: {
+                                enable: true,
+                                chkboxType: {"Y": "s", "N": "ps"},
+                            },
+                        };
+                        // zTree 的数据属性
+                        var permissionzNodes = {{$permission}};
+                        $(document).ready(function () {
+                            zTreeObj = $.fn.zTree.init($("#permission"), permissionsetting, permissionzNodes);
+                            zTreeObj.expandAll(true);
+                        });
+                    </script>
+                </div>
+                <button type="submit" class="btn btn-success">添 加</button>
+            </form>
+        </div>
+    </div>
+
+</block>

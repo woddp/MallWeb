@@ -1,0 +1,125 @@
+<extend name="layout:index" />
+<block name="style">
+    <!--<link href="__PUBLIC__/plug-in/uploadify/uploadify.css" rel="stylesheet">-->
+    <link href="__PUBLIC__/plug-in/layer/skin/layer.css" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLIC__/plug-in/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+
+    <style>
+    .btn-success{
+        width: 80px;
+    text-align: center;
+    }
+</style>
+</block>
+<block name="content">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <ol class="breadcrumb">
+        <li><a href="{{:U('Index/index')}}">首页</a></li>
+        <li><a href="{{:U('Role/index')}}">角色列表</a></li>
+        <li class="active">角色修改</li>
+    </ol>
+
+    <hr/>
+    <div class="container" style="width: 50%;">
+
+
+        <form action="{{:U('Role/edit')}}" method="post">
+            <div class="form-group">
+                <label >角色名称</label>
+                <input type="text" name="name" class="form-control"  value="{{$role.name}}" placeholder="角色名称">
+                <input type="hidden" name="id" class="form-control"  value="{{$role.id}}" placeholder="角色名称">
+            </div>
+            <div class="form-group">
+                <label >权限选择</label>
+                <ul id="tree" class="ztree"></ul>
+                <div id="permission">
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label >角色介绍</label>
+                <textarea  name="intro" class="form-control" rows="3">{{$role.intro}}</textarea>
+            </div>
+            <div class="form-group">
+                <label >排序</label>
+                <input type="number"  name="sort" class="form-control" value="{{$role.sort}}" placeholder="序号">
+            </div>
+            <div class="form-group">
+                <label >状态</label>
+                <div class="radio">
+                    <label>
+                        <input class="status" type="radio" name="status"
+                            checked   value="1" > 显示
+                    </label>
+                    <label>
+                        <input class="status" type="radio" name="status"
+                               value="0" > 隐藏
+                    </label>
+                </div>
+
+                <script type="text/javascript" src="__PUBLIC__/plug-in/zTree/jquery.ztree.core.min.js"></script>
+                <script type="text/javascript" src="__PUBLIC__/plug-in/zTree/jquery.ztree.excheck.min.js"></script>
+                 <script>
+                   $(function () {
+                       $('.status').val([{{$role['status']}}]);
+                   })
+                     ///////////////////////////////////    tree 树形      //////////////////////////////////
+                     var zTreeObj;
+                     // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+                     var setting = {
+                         data: {
+                             simpleData: {
+                                 enable: true,
+                                 pIdKey: "parent_id",
+                             }
+                         },
+                         callback: {
+                             //oncheck 选择事件
+                             onCheck: function () {
+                                 //获取选中的值
+                                var nodes=zTreeObj.getCheckedNodes(true);
+                                 $('#permission').empty();
+                                 $(nodes).each(function (i,v) {
+                                     //选中一个权限则添加一个隐藏域
+                                    var input='<input type="hidden" value="'+v.id+'" name="permission_id[]">';
+                                    $(input).appendTo($('#permission'));
+                                 });
+                             }
+                         },
+                         check: {
+                             enable: true,
+                             chkboxType :{ "Y":"s", "N" : "ps" },
+                         },
+                     };
+                     // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+                     var zNodes={{$permission}};
+                     $(document).ready(function(){
+                         zTreeObj = $.fn.zTree.init($("#tree"), setting, zNodes);
+
+                       //展开树形
+                         zTreeObj.expandAll(true);
+                       //获取回显数据
+                         var permission={{$roelPerssion}};
+                         $(permission).each(function (i,v) {
+                             //获取到这些节点
+                             var nodes=zTreeObj.getNodeByParam('id',v.permission_id);
+                             console.log(nodes);
+                             //然后把节点选中
+                             zTreeObj.checkNode(nodes,true);
+                             //然后添加隐藏表单
+                             var input='<input type="hidden" value="'+v.permission_id+'" name="permission_id[]">';
+                             $(input).appendTo($('#permission'));
+                         });
+
+                     });
+
+                 </script>
+            </div>
+            <button type="submit" class="btn btn-success">修 改</button>
+        </form>
+    </div>
+</div>
+
+</block>

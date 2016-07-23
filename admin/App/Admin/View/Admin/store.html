@@ -1,0 +1,87 @@
+<extend name="layout:index" />
+<block name="style">
+    <!--<link href="__PUBLIC__/plug-in/uploadify/uploadify.css" rel="stylesheet">-->
+    <link href="__PUBLIC__/plug-in/layer/skin/layer.css" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLIC__/plug-in/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+</block>
+<block name="content">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <ol class="breadcrumb">
+        <li><a href="{{:U('Index/index')}}">首页</a></li>
+        <li><a href="{{:U('Admin/index')}}">管理员列表</a></li>
+        <li class="active">管理员添加</li>
+    </ol>
+
+    <hr/>
+    <div class="container" style="width: 50%;">
+        <form action="{{:U('Admin/store')}}" method="post">
+            <div class="form-group">
+                <label >管理员名称</label>
+                <input type="text" name="username" class="form-control"  value="" placeholder="角色名称">
+            </div>
+            <div class="form-group">
+                <label >角色选择</label>
+                <ul id="tree" class="ztree"></ul>
+                <div id="role">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label >密码</label>
+                <input type="password"  name="password" class="form-control" value="" >
+            </div>
+            <div class="form-group">
+                <label >重复密码</label>
+                <input type="password"  name="repassword" class="form-control" value="" >
+            </div>
+
+            <div class="form-group">
+                <label >邮箱</label>
+                <input type="email"  name="email" class="form-control" value="" placeholder="邮箱">
+            </div>
+
+                <script type="text/javascript" src="__PUBLIC__/plug-in/zTree/jquery.ztree.core.min.js"></script>
+                <script type="text/javascript" src="__PUBLIC__/plug-in/zTree/jquery.ztree.excheck.min.js"></script>
+                 <script>
+
+                     ///////////////////////////////////    tree 树形      //////////////////////////////////
+                     var zTreeObj;
+                     // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+                     var setting = {
+                         data: {
+                             simpleData: {
+                                 enable: true,
+                             }
+                         },
+                         callback: {
+                             //oncheck 选择事件
+                             onCheck: function () {
+                                 //获取选中的值
+                                var nodes=zTreeObj.getCheckedNodes(true);
+                                 $('#role').empty();
+                                 $(nodes).each(function (i,v) {
+                                     //选中一个权限则添加一个隐藏域
+                                    var input='<input type="hidden" value="'+v.id+'" name="role_id[]">';
+                                    $(input).appendTo($('#role'));
+                                 });
+                             }
+                         },
+                         check: {
+                             enable: true,
+                             chkboxType :{ "Y":"s", "N" : "ps" },
+                         },
+                     };
+                     // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+                     var zNodes={{$role}};
+                     $(document).ready(function(){
+                         zTreeObj = $.fn.zTree.init($("#tree"), setting, zNodes);
+                         zTreeObj.expandAll(true);
+                     });
+
+                 </script>
+            <button type="submit" class="btn btn-success">添 加</button>
+        </form>
+    </div>
+</div>
+
+</block>

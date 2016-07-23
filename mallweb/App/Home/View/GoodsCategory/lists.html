@@ -1,0 +1,249 @@
+<extend name="Layout:index.back"/>
+<block name="css">
+    <link rel="stylesheet" href="__PUBLIC__/style/goods.css" type="text/css">
+    <link rel="stylesheet" href="__PUBLIC__/style/list.css" type="text/css">
+    <link rel="stylesheet" href="__PUBLIC__/style/common.css" type="text/css">
+    <script type="text/javascript" src="__PUBLIC__/js/jqzoom-core.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/header.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/list.js"></script>
+   <style>
+       .page span{
+           display: inline-block;
+
+           padding: 4px 10px 5px;
+           color: #005aa0;
+           border: 1px solid #ccc;
+           font-size: 14px;
+           background: #fff;
+           border-radius: 3px;
+       }
+   </style>
+
+    <!-- jqzoom 效果 -->
+    <script type="text/javascript">
+        $(function(){
+            $('.jqzoom').jqzoom({
+                zoomType: 'standard',
+                lens:true,
+                preloadImages: false,
+                alwaysOn:false,
+                title:false,
+                zoomWidth:400,
+                zoomHeight:400
+            });
+        })
+    </script>
+</block>
+<block name="content">
+<div class="list w1210 bc mt10">
+    <!-- 面包屑导航 start -->
+    <div class="breadcrumb">
+        <h2>当前位置：<a href="">首页</a> &gt; <a href="">电脑、办公</a></h2>
+    </div>
+    <!-- 面包屑导航 end -->
+
+    <!-- 左侧内容 start -->
+    <div class="list_left fl mt10">
+        <!-- 分类列表 start -->
+        <div class="catlist">
+            <h2>电脑、手机、办公</h2>
+            <div class="catlist_wrap">
+                <foreach name="goods_category" item="list">
+                <div class="child">
+                            <h3 <if condition="$cur_id eq $list['id']">class="on"</if> ><b></b>{{$list['name']}}</h3>
+                            <ul <if condition="$cur_id neq $list['id']">class="none"</if> >
+                    <?php foreach($list['child'] as $li): ?>
+                    <li><a href="">{{$li['name']}}</a></li>
+                    <?php endforeach;?>
+                            </ul>
+                </div>
+                </foreach>
+            </div>
+
+            <div style="clear:both; height:1px;"></div>
+        </div>
+        <!-- 分类列表 end -->
+
+        <div style="clear:both;"></div>
+
+        <!-- 新品推荐 start -->
+        <div class="newgoods leftbar mt10">
+            <h2><strong>新品推荐</strong></h2>
+            <div class="leftbar_wrap">
+                <ul>
+                    <foreach name="list_new" item="row" >
+                        <li>
+                            <dl>
+                                <dt><a href="{{:U('Index/goods',array('id'=>$row['id']))}}"><img src="{{$row['logo']}}" alt=""></a></dt>
+                                <dd><a href="{{:U('Index/goods',array('id'=>$row['id']))}}">{{$row['name']}}</a></dd>
+                                <dd><strong>￥{{$row['shop_price']}}</strong></dd>
+                            </dl>
+                        </li>
+                    </foreach>
+
+
+                </ul>
+            </div>
+        </div>
+        <!-- 新品推荐 end -->
+
+        <!--热销排行 start -->
+        <div class="hotgoods leftbar mt10">
+            <h2><strong>热销排行榜</strong></h2>
+            <div class="leftbar_wrap">
+                <ul>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+        <!--热销排行 end -->
+
+        <!-- 最近浏览 start -->
+        <div class="viewd leftbar mt10">
+            <h2><a href="">清空</a><strong>最近浏览过的商品</strong></h2>
+            <div class="leftbar_wrap">
+                <dl>
+                    <dt><a href=""><img src="__PUBLIC__/images/hpG4.jpg" alt=""></a></dt>
+                    <dd><a href="">惠普G4-1332TX 14英寸笔记...</a></dd>
+                </dl>
+
+                <dl class="last">
+                    <dt><a href=""><img src="__PUBLIC__/images/crazy4.jpg" alt=""></a></dt>
+                    <dd><a href="">直降200元！TCL正1.5匹空调</a></dd>
+                </dl>
+            </div>
+        </div>
+        <!-- 最近浏览 end -->
+    </div>
+    <!-- 左侧内容 end -->
+
+    <!-- 列表内容 start -->
+    <div class="list_bd fl ml10 mt10">
+        <!-- 热卖、促销 start -->
+        <div class="list_top">
+            <!-- 热卖推荐 start -->
+            <div class="hotsale fl">
+                <h2><strong><span class="none">热卖推荐</span></strong></h2>
+                <ul>
+                    <foreach name="list_hot" item="row" >
+                        <li>
+                            <dl>
+                                <dt><a href=""><img src="{{$row['logo']}}" alt=""></a></dt>
+                                <dd class="name"><a href="{{:U('Index/goods',array('id'=>$row['id']))}}">{{$row['name']}}</a></dd>
+                                <dd class="price">特价：<strong>￥{{$row['shop_price']}}</strong></dd>
+                                <dd class="buy"><span>立即抢购</span></dd>
+                            </dl>
+                        </li>
+                    </foreach>
+
+                </ul>
+            </div>
+            <!-- 热卖推荐 end -->
+
+            <!-- 促销活动 start -->
+            <!--<div class="promote fl">-->
+                <!--<h2><strong><span class="none">促销活动</span></strong></h2>-->
+                <!--<ul>-->
+                    <!--<li><b>.</b><a href="">DIY装机之向雷锋同志学习！</a></li>-->
+                    <!--<li><b>.</b><a href="">京东宏碁联合促销送好礼！</a></li>-->
+                    <!--<li><b>.</b><a href="">台式机笔记本三月巨惠！</a></li>-->
+                    <!--<li><b>.</b><a href="">富勒A53g智能人手识别鼠标</a></li>-->
+                    <!--<li><b>.</b><a href="">希捷硬盘白色情人节专场</a></li>-->
+                <!--</ul>-->
+
+            <!--</div>-->
+            <!-- 促销活动 end -->
+        </div>
+        <!-- 热卖、促销 end -->
+
+        <div style="clear:both;"></div>
+
+        <!-- 商品筛选 start -->
+        <div class="filter mt10">
+            <h2><a href="">重置筛选条件</a> <strong>商品筛选</strong></h2>
+            <div class="filter_wrap">
+                <dl>
+                    <dt>商品种类：</dt>
+                    <dd class=""><a href="">不限</a></dd>
+                    <foreach name="class" item="list">
+                        <if condition="$list.id eq $cur_id" >
+
+                         <else/>
+                            <dd ><a href="">{{$list['name']}}</a></dd>
+                        </if>
+                    </foreach>
+
+
+                </dl>
+                <dl>
+                    <dt>商品品牌：</dt>
+                    <dd class="cur"><a href="">不限</a></dd>
+                    <foreach name="brand_class" item="list">
+
+                            <dd ><a href="">{{$list['name']}}</a></dd>
+                    </foreach>
+                </dl>
+
+                <dl>
+                    <dt>价格：</dt>
+                    <dd class="cur"><a href="">不限</a></dd>
+                    <dd><a href="">1000-1999</a></dd>
+                    <dd><a href="">2000-2999</a></dd>
+                    <dd><a href="">3000-3499</a></dd>
+                    <dd><a href="">3500-3999</a></dd>
+                    <dd><a href="">4000-4499</a></dd>
+                    <dd><a href="">4500-4999</a></dd>
+                    <dd><a href="">5000-5999</a></dd>
+                    <dd><a href="">6000-6999</a></dd>
+                    <dd><a href="">7000-7999</a></dd>
+                </dl>
+
+
+
+            </div>
+        </div>
+        <!-- 商品筛选 end -->
+
+        <div style="clear:both;"></div>
+
+        <!-- 排序 start -->
+        <div class="sort mt10">
+            <dl>
+                <dt>排序：</dt>
+                <dd class="cur"><a href="">销量</a></dd>
+                <dd><a href="">价格</a></dd>
+                <dd><a href="">评论数</a></dd>
+                <dd><a href="">上架时间</a></dd>
+            </dl>
+        </div>
+        <!-- 排序 end -->
+
+        <div style="clear:both;"></div>
+
+        <!-- 商品列表 start-->
+        <div class="goodslist mt10">
+            <ul>
+                <foreach name="goods" item="list">
+                <li>
+                    <dl>
+                        <dt><a href="{{:U('Goods/goods',array('id'=>$list['id']))}}"><img src="{{$list['logo']}}" alt=""></a></dt>
+                        <dd><a href="{{:U('Goods/goods',array('id'=>$list['id']))}}">{{$list['name']}}</a>
+                        </dd><dd><strong>￥{{$list['price']}}</strong>
+                    </dd><dd><a href=""><em>已有10人评价</em></a>
+                    </dd></dl>
+                </li>
+                </foreach>
+            </ul>
+        </div>
+        <!-- 商品列表 end-->
+
+        <!-- 分页信息 start -->
+        <div class="page mt20">
+            {{$show}}
+        </div>
+        <!-- 分页信息 end -->
+
+    </div>
+    <!-- 列表内容 end -->
+</div>
+</block>

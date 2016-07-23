@@ -1,0 +1,146 @@
+<extend name="layout:index" />
+<block name="style">
+    <link href="__PUBLIC__/plug-in/layer/skin/layer.css" rel="stylesheet">
+    <link href="__PUBLIC__/plug-in/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <style>
+        .btn-success{
+            width: 80px;
+            text-align: center;
+        }
+    </style>
+</block>
+<block name="content">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <ol class="breadcrumb">
+        <li><a href="{{:U('Index/index')}}">首页</a></li>
+        <li><a href="{{:U('Brand/index')}}">供货商列表</a></li>
+        <li class="active">{{$brand.name}}修改</li>
+    </ol>
+
+    <hr/>
+    <div class="container" style="width: 50%;">
+
+
+        <form action="{{:U('Brand/edit')}}" method="post">
+            <div class="form-group">
+                <label >品牌名称</label>
+                <input type="text" name="name" class="form-control"  value="{{$brand.name}}" placeholder="品牌名称">
+                <input type="hidden" name="id"  value="{{$brand.id}}" >
+            </div>
+            <div class="form-group">
+                <label >品牌logo</label>
+
+                <input type="hidden" name="logo"  id="login" value="{{$brand.logo}}" >
+                <input id="file_upload" name="file_upload" type="file" enctype="multipart/form-data">
+                <br>
+                <img id="upload_img" style="display: none"  src=""  width="100"/>
+            </div>
+            <script src="__PUBLIC__/plug-in/uploadify/jquery.uploadify.min.js"></script>
+            <script src="__PUBLIC__/plug-in/layer/layer.js"></script>
+            <script>
+                if("{{$brand.logo}}"){
+                    $("#upload_img").css('display','block');
+                    $("#upload_img").attr('src','{{$brand.logo}}');
+                }
+
+                $('#file_upload').uploadify({
+                    'swf':"__PUBLIC__/plug-in/uploadify/uploadify.swf",
+                    'uploader':"{{:U('Upload/upload')}}",
+                    'buttonText':'上传',
+                    'buttonClass':'btn-success',
+                    onUploadSuccess:function (obj,url) {
+
+                        console.log(url);
+                        var data=$.parseJSON(url);
+                        if(data.status==1){
+                            $('#upload_img').attr('style','display:block');
+                            $('#upload_img').attr('src',data.url);
+
+                            $('#login').val(data.url);
+                            layer.alert('上传成功', {icon: 1});
+                        }else {
+                            layer.alert('上传失败,'+data.mes, {icon: 2});
+                        }
+
+                    }
+                });
+            </script>
+
+            <div class="form-group">
+                <label >产品分类</label>
+                <input class="form-control" id="disabledInput" type="text" value="" disabled>
+                <input type="hidden" id="parent_id" name="goods_category_id"  value="" >
+                <div class="zTreeDemoBackground left">
+                    <ul id="goodstree" class="ztree"></ul>
+                </div>
+            </div>
+            <script src="__PUBLIC__/plug-in/ztree/jquery.ztree.core.min.js"></script>
+            <script>
+                var zTreeObj;
+                // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+                var setting = {
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            pIdKey: "parent_id",
+                        },
+
+                    },
+
+                    callback: {
+                        onClick: function (event,name,obj) {
+                            console.log(obj.name)
+                            $('#disabledInput').val(obj.name);
+                            $('#parent_id').val(obj.id);
+                        }
+                    }
+                };
+                // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+                var zNodes={{$goodscategory}};
+                $(document).ready(function(){
+                    zTreeObj = $.fn.zTree.init($("#goodstree"), setting, zNodes);
+                    zTreeObj.expandAll(true);
+                    //获取当前{{$goods.parent_id}}父节点信息
+                    var nodes = zTreeObj.getNodesByParam("id", {{$brand.goods_category_id}});
+                    console.log(nodes[0]);
+                    //选中当前节点 回显显示
+                    zTreeObj.selectNode(nodes[0]);
+                    //父级name
+                    $('#disabledInput').val(nodes[0].name);
+                    //父级id
+                    $('#parent_id').val({{$goods.goods_category_id}});
+
+                });
+            </script>
+            <div class="form-group">
+                <label >品牌介绍</label>
+                <textarea  name="intro" class="form-control" rows="3">{{$brand.intro}}</textarea>
+            </div>
+            <div class="form-group">
+                <label >排序</label>
+                <input type="number" name="sort" class="form-control" value="{{$supplier.sort}}" placeholder="序号">
+            </div>
+            <div class="form-group">
+                <label >状态</label>
+                <div class="radio">
+                    <label>
+                        <input class="status" type="radio" name="status"
+                               value="1" > 显示
+                    </label>
+                    <label>
+                        <input class="status" type="radio" name="status"
+                               value="0" > 隐藏
+                    </label>
+                </div>
+                 <script>
+                     $(function () {
+                         $('.status').val([{{$brand.status|default=1}}]);
+                     })
+                 </script>
+            </div>
+            <button type="submit" class="btn btn-success">修改</button>
+        </form>
+    </div>
+</div>
+
+</block>

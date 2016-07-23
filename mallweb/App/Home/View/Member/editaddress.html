@@ -1,0 +1,167 @@
+<extend name="Layout:index.back"/>
+<block name="css">
+    <link rel="stylesheet" href="__PUBLIC__/style/home.css" type="text/css">
+    <link rel="stylesheet" href="__PUBLIC__/style/address.css" type="text/css">
+
+</block>
+<block name="content">
+    <!-- 页面主体 start -->
+    <div class="main w1210 bc mt10">
+        {{:W('UserMenu/Menu')}}
+
+        <!-- 右侧内容区域 start -->
+        <div class="content fl ml10">
+
+            <div class="address_bd mt10">
+                <h4>新增收货地址</h4>
+                <form action="{{:U('Member/update')}}" METHOD="post" name="address_form" id="address_form">
+                    <ul>
+                        <li>
+                            <label for=""><span>*</span>收 货 人：</label>
+                            <input type="text" name="name" value="{{$user_address['name']}}" class="txt"/>
+                            <input type="hidden" name="id" value="{{$user_address['id']}}" class="txt"/>
+                        </li>
+                        <li>
+                            <label for=""><span>*</span>所在地区：</label>
+                            <select name="province_id" id="province_id">
+                                <option value="">请选择</option>
+                                <foreach name="rows" item="row">
+                                    <option  <if condition="$row['id'] eq $user_address['province_id']">selected</if> value="{{$row['id']}}">{{$row['name']}}</option>
+                                </foreach>
+                            </select>
+                            <input type="hidden" value="{{$user_address['province_name']}}" name="province_name" id="province_name">
+                            <select name="city_id" id="city_id">
+                                <option value="">请选择</option>
+                            </select>
+                            <input type="hidden" value="{{$user_address['city_name']}}" name="city_name"  id="city_name">
+                            <select name="area_id" id="area_id">
+                                <option value="">请选择</option>
+                            </select>
+                            <input type="hidden" value="{{$user_address['area_name']}}" name="area_name" id="area_name">
+
+                        </li>
+                        <li>
+                            <label for=""><span>*</span>详细地址：</label>
+                            <input type="text" name="detail_address" value="{{$user_address['detail_address']}}" class="txt address"/>
+                        </li>
+                        <li>
+                            <label for=""><span>*</span>手机号码：</label>
+                            <input type="text" name="tel" value="{{$user_address['tel']}}" class="txt"/>
+                        </li>
+                        <li>
+                            <label for="">&nbsp;</label>
+                            <input type="checkbox" id="is_default" name="is_default" value="1" class="check"/>设为默认地址
+                            <script>
+                                $(function () {
+                                    $('#is_default').val([{{$user_address['is_default']}}]);
+                                })
+                            </script>
+                        </li>
+                        <li>
+                            <label for="">&nbsp;</label>
+                            <input type="SUBMIT" name="" class="btn" id="btn" value="保存"/>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <script>
+
+                //页面加载完成就加载三级联动地址
+                $(function () {
+                    var url = "{{:U('Member/address')}}";
+                    var data = {id: $(this).val()};
+                    //给隐藏输入框添加选择的地址
+                    var province=$(this).find('option:selected').text();
+                    $('#province_name').val(province);
+
+                    var html = '';
+                    $.getJSON(url, data, function (rows) {
+
+                        //把其他选择框清除 长度为1
+                        $('#city_id').get(0).length = 1;
+                        $('#area_id').get(0).length = 1;
+                        $(rows).each(function (i, v) {
+                            html += "<option  value=" + v.id + ">" + v.name + "</option>";
+                        });
+                        $('#city_id').append(html);
+                    });
+
+                   //加载城市
+                    var c_data = {id:"{{$user_address['province_id']}}"};
+                    var c_html = '';
+                    $.getJSON(url, c_data, function (rows) {
+                        //把其他选择框清除 长度为1
+                        $(rows).each(function (i, v) {
+                            if(v.id=="{{$user_address['city_id']}}"){
+                                c_html += "<option selected='selected'  value=" + v.id + ">" + v.name + "</option>";
+                            }
+                            c_html += "<option   value=" + v.id + ">" + v.name + "</option>";
+                        });
+                        $('#city_id').append(c_html);
+                    });
+                    //加载区县
+                    var a_data = {id:"{{$user_address['city_id']}}"};
+                    var a_html = '';
+                    $.getJSON(url, a_data, function (rows) {
+                        //把其他选择框清除 长度为1
+
+                        $(rows).each(function (i, v) {
+                            if(v.id=="{{$user_address['area_id']}}"){
+                                a_html += "<option selected='selected'  value=" + v.id + ">" + v.name + "</option>";
+                            }
+                            a_html += "<option   value=" + v.id + ">" + v.name + "</option>";
+                        });
+                        $('#area_id').append(a_html);
+                    });
+                });
+
+////////////////////////////////////////////////////////////
+                $(function () {
+        var url = "{{:U('Member/address')}}";
+        $('#province_id').change(function () {
+            var data = {id: $(this).val()};
+            //给隐藏输入框添加选择的地址
+            var province=$(this).find('option:selected').text();
+            $('#province_name').val(province);
+
+            var html = '';
+            $.getJSON(url, data, function (rows) {
+
+                //把其他选择框清除 长度为1
+                $('#city_id').get(0).length = 1;
+                $('#area_id').get(0).length = 1;
+                $(rows).each(function (i, v) {
+                    html += "<option  value=" + v.id + ">" + v.name + "</option>";
+                });
+                $('#city_id').append(html);
+            });
+        });
+        $('#city_id').change(function () {
+            //给隐藏输入框添加选择的地址
+            var city=$(this).find('option:selected').text();
+            $('#city_name').val(city);
+            var data = {id: $(this).val()};
+            var html = '';
+            $.getJSON(url, data, function (rows) {
+                $('#area_id').get(0).length = 1;
+                $(rows).each(function (i, v) {
+                    html += "<option value=" + v.id + ">" + v.name + "</option>";
+                });
+                $('#area_id').append(html);
+            });
+        });
+        $('#area_id').change(function () {
+            var area=$(this).find('option:selected').text();
+            $('#area_name').val(area);
+        });
+
+    });
+
+
+
+            </script>
+        </div>
+        <!-- 右侧内容区域 end -->
+    </div>
+    <!-- 页面主体 end-->
+</block>

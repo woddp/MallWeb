@@ -1,0 +1,146 @@
+<extend name="layout:index" />
+<block name="style">
+    <link href="__PUBLIC__/plug-in/dist/css/wangEditor.min.css" rel="stylesheet">
+    <style type="text/css">
+        #editor-trigger {
+            height: 400px;
+            /*max-height: 500px;*/
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+    </style>
+</block>
+<block name="content">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <ol class="breadcrumb">
+        <li><a href="{{:U('Index/index')}}">首页</a></li>
+        <li><a href="{{:U('Article/index')}}">文章列表</a></li>
+        <li class="active">文章添加</li>
+    </ol>
+
+    <hr/>
+    <div class="container" style="width: 50%;">
+
+
+        <form action="{{:U('Article/store')}}" method="post">
+            <div class="form-group">
+                <label >文章</label>
+                <input type="text" name="name" class="form-control"  value="{{$article.name}}" placeholder="文章名称">
+                <input type="hidden" name="id"  value="{{$article.id}}" >
+            </div>
+            <div class="form-group">
+                <label >分类</label>
+                <select name="article_category_id" class="form-control">
+                    <volist name="article_category" id="category">
+                    <option value="{{$category.id}}">{{$category.name}}</option>
+                    </volist>
+                </select>
+            </div>
+
+
+
+            <div class="form-group">
+                <label >简介</label>
+                <input type="text" name="intro" class="form-control"  value="{{$article.name}}" placeholder=简介">
+            </div>
+            <div class="form-group">
+                <label >排序</label>
+                <input type="number" name="sort" class="form-control" value="20" placeholder="序号">
+            </div>
+
+            <div class="form-group">
+                <label >内容</label>
+                <div id="editor-trigger"><p>请输入内容</p></div>
+                 <textarea id="editor" name="content" style="display:none;">
+                    <p>请输入内容...</p>
+                </textarea>
+
+                <p><br></p>
+                <link rel="stylesheet" type="text/css" href="__PUBLIC__/plug-in/dist/css/wangEditor.min.css">
+                <style type="text/css">
+                    #editor-trigger {
+                        height: 400px;
+                        /*max-height: 500px;*/
+                    }
+                    .container {
+                        width: 100%;
+                        margin: 0 auto;
+                        position: relative;
+                    }
+                </style>
+                <script type="text/javascript" src="__PUBLIC__/plug-in/dist/js/lib/jquery-1.10.2.min.js"></script>
+                <script type="text/javascript" src="__PUBLIC__/plug-in/dist/js/wangEditor.js"></script>
+                <!--<script type="text/javascript" src="../dist/js/wangEditor.min.js"></script>-->
+                <script type="text/javascript">
+                    // 阻止输出log
+                    // wangEditor.config.printLog = false;
+
+                    var editor = new wangEditor('editor-trigger');
+
+                    // 上传图片
+                    editor.config.uploadImgUrl = "{{:U('Upload/edit_upload')}}";
+                    //                    editor.config.uploadParams = {
+                    //                        // token1: 'abcde',
+                    //                        // token2: '12345'
+                    //                    };
+                    //                    editor.config.uploadHeaders = {
+                    //                        // 'Accept' : 'text/x-json'
+                    //                    }
+                    // editor.config.uploadImgFileName = 'myFileName';
+
+                    // 表情显示项
+                    editor.config.emotionsShow = 'value';
+
+                    // 只粘贴纯文本
+                    // editor.config.pasteText = true;
+
+                    // 跨域上传
+                    // editor.config.uploadImgUrl = 'http://localhost:8012/upload';
+
+                    // 第三方上传
+                    // editor.config.customUpload = true;
+
+                    // editor.config.menus = [
+                    //     'img',
+                    //     'insertcode',
+                    //     'eraser',
+                    //     'fullscreen'
+                    // ];
+
+                    // onchange 事件
+                    editor.onchange = function () {
+                        $('#editor').text(this.$txt.html());
+                        console.log(this.$txt.html());
+                    };
+
+                    editor.create();
+                </script>
+
+            </div>
+            <div class="form-group">
+                <label >状态</label>
+                <div class="radio">
+                    <label>
+                        <input class="status" type="radio" name="status"
+                               value="1" > 显示
+                    </label>
+                    <label>
+                        <input class="status" type="radio" name="status"
+                               value="0" > 隐藏
+                    </label>
+                </div>
+                 <script>
+                     $(function () {
+                         $('.status').val([{{$article.status|default=1}}]);
+                     })
+                 </script>
+            </div>
+            <button type="submit" class="btn btn-success">添 加</button>
+        </form>
+    </div>
+</div>
+
+</block>

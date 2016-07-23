@@ -1,0 +1,91 @@
+<extend name="layout:index" />
+<block name="style">
+    <link href="__PUBLIC__/plug-in/layer/skin/layer.css" rel="stylesheet">
+    <link href="__PUBLIC__/plug-in/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+</block>
+<block name="content">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <ol class="breadcrumb">
+        <li><a href="{{:U('Index/index')}}">首页</a></li>
+        <li><a href="{{:U('GoodsCategory/index')}}">产品列表</a></li>
+        <li class="active">产品添加</li>
+    </ol>
+
+    <hr/>
+    <div class="container" style="width: 50%;">
+
+
+        <form action="{{:U('GoodsCategory/store')}}" method="post">
+            <div class="form-group">
+                <label >产品分类名称</label>
+                <input type="text" name="name" class="form-control"  value="{{$brand.name}}" placeholder="产品分类名称">
+                <input type="hidden" name="id"  value="{{$brand.id}}" >
+            </div>
+            <div class="form-group">
+                <label >分类标识</label>
+                <input type="text" name="sign" class="form-control"  value="{{$brand.sign}}" placeholder="产品分类标识">
+            </div>
+            <div class="form-group">
+                <label >产品分类</label>
+                <input class="form-control" id="disabledInput" type="text" value="" disabled>
+                <input type="hidden" id="parent_id" name="parent_id"  value="" >
+                <div class="zTreeDemoBackground left">
+                  <ul id="goodstree" class="ztree"></ul>
+                 </div>
+            </div>
+            <script src="__PUBLIC__/plug-in/ztree/jquery.ztree.core.min.js"></script>
+            <script>
+                var zTreeObj;
+                // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+                var setting = {
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            pIdKey: "parent_id",
+                        }
+                    },
+                    callback: {
+                        onClick: function (event,name,obj) {
+                            console.log(obj.name)
+                            $('#disabledInput').val(obj.name);
+                            $('#parent_id').val(obj.id);
+                        }
+                    }
+                };
+                // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+                 var zNodes={{$goodscategorys}};
+                $(document).ready(function(){
+                    zTreeObj = $.fn.zTree.init($("#goodstree"), setting, zNodes);
+                    zTreeObj.expandAll(true);
+                });
+            </script>
+            <div class="form-group">
+                <label >产品介绍</label>
+                <textarea  name="intro" class="form-control" rows="3">{{$brand.intro}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label >状态</label>
+                <div class="radio">
+                    <label>
+                        <input class="status" type="radio" name="status"
+                               value="1" > 显示
+                    </label>
+                    <label>
+                        <input class="status" type="radio" name="status"
+                               value="0" > 隐藏
+                    </label>
+                </div>
+                 <script>
+                     $(function () {
+                         $('.status').val([{{$brand.status|default=1}}]);
+                     })
+                 </script>
+            </div>
+            <button type="submit" class="btn btn-success">添 加</button>
+        </form>
+    </div>
+</div>
+
+</block>
